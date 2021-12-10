@@ -12,7 +12,7 @@ from slack_sdk.errors import SlackApiError
 
 # --- variables ---
 
-CHECK_INTERVAL = 1
+CHECK_INTERVAL = 60
 
 scheduler = sched.scheduler(time.time, time.sleep)
 
