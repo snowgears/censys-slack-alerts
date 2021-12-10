@@ -1,59 +1,51 @@
 # Censys New Host Risks Slack Alerts
 [Slack bot](https://slack.com/help/articles/115005265703-Create-a-bot-for-your-workspace) that sends alerts for newly discovered host risks in the [Censys ASM platform](https://censys.io/).
 
-**Steps for getting started:**
+![](https://i.imgur.com/OqIWkPK.png)
+
+## Steps for getting started:
 - Install the libraries in requirements.txt
    - ```pip install --upgrade -r requirements.txt```
 - Set your Censys ASM API key
    - ```censys asm config```
    - (find your ASM API key here: https://app.censys.io/integrations)
 - Set the variables in the **alert_host_risks.py** file
-   - **MAIL_RECIPIENTS** - add any email addresses you want to recieve alerts
-   - **MAIL_SUBJECT** - the subject line of the alert email
-   - **MAIL_BODY** - the body of the alert email
    - **CHECK_INTERVAL** - how often to check for new host risks *(in minutes)*
-- Generate a Google API credential *(steps below)*
+   - feel free to also change any of the wording in the message that is sent to channels *(in main_loop())*
+- Define your Slack bot *(steps below)*
 
-**Define the bot in your Slack workspace:**
+## Define the bot in your Slack workspace:
 
-   This script requires the use of a Gmail account to send emails on its behalf. To do this, we will need to generate a json credential for that Google account.
-   - TODO: pull important steps from https://github.com/slackapi/python-slack-sdk/tree/main/tutorial
-   
-   - **Create a project**, and give it a title like "Censys-Email-Alerts" 
+   This script requires the use of a Slack bot account to send messages on its behalf. To do this, we will need to generate a slack bot and invite it to our Slack workspace.
+   - Go to [api.slack.com](https://api.slack.com/apps?new_granular_bot_app=1)
+   - **Create an app**, and give it a title like "Censys Alerting" 
 
-   - ![](https://i.imgur.com/t1xMArI.png)
+   - Go to **Basic Information**
+      - Here you can change the name, description, and picture of your bot
+      - *I have included an app icon in this repo at /images/censys.jpeg*
 
-   - Go to **OAuth Consent Screen**
-      - User Type -> **External**
-      - Fill out the sections **App Information** and **Developer contact information**
-      - On the next page in **Scopes**, manually add the following scopes
-         - *https://www.googleapis.com/auth/gmail.compose*
-         - *https://www.googleapis.com/auth/gmail.send*
-      - On the next page in **Test Users**, add your own gmail address
-      - Go back to the dashboard
-   <br/>
-   <br/>
-   - **Create Credentials**, by going to "Credentials" within your project
+      - ![](https://i.imgur.com/oznqMAz.png)
 
-   - ![](https://i.imgur.com/EI7DgTe.png)
+   - Go to **OAuth and Permissions**
+      - Add the following scopes to the **Bot Token** section
+      - ![](https://i.imgur.com/GT6nYH3.png)
+      
+      - Install the bot to your workspace
+      - ![](https://i.imgur.com/kgopkDc.png)
 
-   - Select **OAuth client ID**, by going to "Credentials" within your project
+      - Copy the **Bot User OAuth Token**
+      - ![](https://i.imgur.com/LRicxmu.png)
 
-   - ![](https://i.imgur.com/pSGMD0U.png)
-
-   - **Download** the JSON credential
-      - rename it to **credentials.json**
-      - move it to this directory
-   
+      - Open a new Terminal window
+         - change directory to this folder
+         - run the following: *(replace 'xoxb-your-token' with the Bot User OAuth Token we just copied)*
+         ```
+         export SLACK_BOT_TOKEN="xoxb-your-token"
+         ```
 
 Now just run the script:
 ``` 
-python alert_host_risks.py
+python3 alert_host_risks.py
 ```
 
-You will be asked to sign in the with a Google account in your browser. Sign in with one of the accounts that you added in **Test Users** in your application and grant it both of the **scopes** we defined *(compose and send)*. It will then successfully grant access and generate a **token.json** in this directory. This is the OAuth refresh token so that you won't have to sign in again until its expiration date is reached.
-
-
-The script is set to run every 60 minutes by default. When new host risks are discovered, an email will be sent to the configured **MAIL_RECIPIENTS** with an attached csv.
-
-![](https://i.imgur.com/r3Nr4Tz.png)
+The script is set to run every 60 minutes by default. When new host risks are discovered, the bot will send alert all channels in Slack it is a member of with an attached csv report.
