@@ -42,6 +42,7 @@
          ```
          export SLACK_BOT_TOKEN="xoxb-your-token"
          ```
+   - Invite the bot user to any Slack channels you want it to alert in
 
 Now just run the script:
 ``` 
