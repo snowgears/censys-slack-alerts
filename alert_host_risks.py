@@ -88,7 +88,7 @@ def main_loop(sc):
     client = get_slack_client()
 
     try:
-        channels = client.users_conversations()
+        channels = client.users_conversations(types = ["public_channel","private_channel"])
         if channels['ok'] is True:
             channels_list = []
             # for every channel this bot user is invited to, send the alert and share the csv report
