@@ -28,7 +28,7 @@
 
    - Go to **OAuth and Permissions**
       - Add the following scopes to the **Bot Token** section
-      - ![](https://i.imgur.com/GT6nYH3.png)
+      - ![](https://i.imgur.com/ulQc5Kb.png)
       
       - Install the bot to your workspace
       - ![](https://i.imgur.com/kgopkDc.png)
