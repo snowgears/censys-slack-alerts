@@ -45,9 +45,10 @@ def get_host_risks():
 
   lastrun = load_lastrun()
   if lastrun == None:
-    lastrun = save_lastrun()
+    cursor = e.get_cursor(filters=["HOST_RISK"])
+  else:
+    cursor = e.get_cursor(lastrun, filters=["HOST_RISK"])
 
-  cursor = e.get_cursor(lastrun, filters=["HOST_RISK"])
   events = e.get_events(cursor)
   save_lastrun()
 
