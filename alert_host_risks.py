@@ -16,7 +16,7 @@ from slack_sdk.errors import SlackApiError
 CHECK_INTERVAL = 60
 
 # Risks of this level and higher will be alerted on
-# options are 1 - low, 2 - medium, and 3 - high
+# options are 1 - low, 2 - medium, 3 - high, 4 - critical
 RISK_SEVERITY_LOGLEVEL = 1
 
 scheduler = sched.scheduler(time.time, time.sleep)
@@ -51,6 +51,8 @@ def include_risk(severity):
         risk_level = 2
     if(severity == "high"):
         risk_level = 3
+    if(severity == "critical"):
+        risk_level = 4
     return risk_level >= RISK_SEVERITY_LOGLEVEL
 
 def get_host_risks():

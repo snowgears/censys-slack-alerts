@@ -11,7 +11,7 @@
    - (find your ASM API key here: https://app.censys.io/integrations)
 - Set the variables in the **alert_host_risks.py** file
    - **CHECK_INTERVAL** - how often to check for new host risks *(in minutes)*
-   - **RISK_SEVERITY_LOGLEVEL** - choose the minimum risk level you want to be alerted on. Options are 1, 2, or 3. (low, medium, high)
+   - **RISK_SEVERITY_LOGLEVEL** - choose the minimum risk level you want to be alerted on. Options are 1, 2, 3, 4. (low, medium, high, critical)
    - feel free to also change any of the wording in the message that is sent to channels *(in main_loop())*
 - Define your Slack bot *(steps below)*
 
