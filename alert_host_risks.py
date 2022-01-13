@@ -12,7 +12,12 @@ from slack_sdk.errors import SlackApiError
 
 # --- variables ---
 
+# time (in minutes) that we check for new host risks
 CHECK_INTERVAL = 60
+
+# Risks of this level and higher will be alerted on
+# options are 1 - low, 2 - medium, and 3 - high
+RISK_SEVERITY_LOGLEVEL = 1
 
 scheduler = sched.scheduler(time.time, time.sleep)
 
@@ -40,6 +45,14 @@ def save_lastrun():
 def get_slack_client():
     return WebClient(token=os.environ['SLACK_BOT_TOKEN'])
 
+def include_risk(severity):
+    risk_level = 1
+    if(severity == "medium"):
+        risk_level = 2
+    if(severity == "high"):
+        risk_level = 3
+    return risk_level >= RISK_SEVERITY_LOGLEVEL
+
 def get_host_risks():
   e = Events()
 
@@ -55,18 +68,19 @@ def get_host_risks():
   host_risks = []
   for event in events:
     # only show logbook events with the 'add' tag
-    if event["operation"] == "ADD":
+    if event["operation"] == "ADD" and include_risk(event["data"]["severity"]):
         host_risk = {}
         host_risk["timestamp"] = event["timestamp"]
         host_risk["ip_address"] = event["entity"]["ipAddress"]
         host_risk["risk_title"] = event["data"]["title"]
+        host_risk["severity"] = event["data"]["severity"]
         host_risks.append(host_risk)
 
   return host_risks
 
 def build_csv(dict):
     with open('host-risks.csv', 'w') as csvfile:
-      writer = csv.DictWriter(csvfile, fieldnames=["timestamp", "ip_address", "risk_title"])
+      writer = csv.DictWriter(csvfile, fieldnames=["timestamp", "ip_address", "risk_title", "severity"])
       writer.writeheader()
       writer.writerows(dict)
 
